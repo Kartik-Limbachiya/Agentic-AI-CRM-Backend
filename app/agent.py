@@ -20,7 +20,7 @@ if not GEMINI_API_KEY:
 
 # Initialize the LLM client
 llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash-exp", # Or "gemini-1.5-flash" depending on access
+    model="gemini-1.5-flash", # Or "gemini-1.5-flash" depending on access
     google_api_key=GEMINI_API_KEY,
     temperature=0.7,
     convert_system_message_to_human=True 
