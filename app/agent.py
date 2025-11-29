@@ -99,8 +99,7 @@ def executor_node(state: AgentState):
     platform_map = {
         'LinkedIn': 'linkedin', 
         'YouTube': 'youtube', 
-        'Threads': 'twitter', # Note: Ayrshare often uses 'twitter' or specific codes. Check your Ayrshare dashboard for exact platform strings.
-        'Instagram': 'instagram'
+        'Threads': 'threads'
     }
 
     for post in state['posts']:
