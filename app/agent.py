@@ -6,6 +6,7 @@ from langgraph.graph import StateGraph, END
 from langchain_google_genai import ChatGoogleGenerativeAI # <-- CORRECTED IMPORT
 from langchain_core.messages import SystemMessage, HumanMessage
 from dotenv import load_dotenv
+import requests
 
 # Load environment variables (critical for local development)
 load_dotenv()
@@ -89,38 +90,85 @@ def planner_node(state: AgentState):
 
 def executor_node(state: AgentState):
     """
-    Node 2: Executes the posts via Ayrshare (or simulation) and simulates follow-up analytics.
+    Node 2: Executes the posts via Ayrshare API.
     """
-    print("[AGENT: EXECUTOR] Starting Execution and Follow-up...")
+    print("[AGENT: EXECUTOR] Starting Execution...")
     results = []
-    platform_map = {'LinkedIn': 'linkedin', 'YouTube': 'youtube', 'Threads': 'threads'}
+    
+    # Map friendly names to Ayrshare platform codes
+    platform_map = {
+        'LinkedIn': 'linkedin', 
+        'YouTube': 'youtube', 
+        'Threads': 'twitter', # Note: Ayrshare often uses 'twitter' or specific codes. Check your Ayrshare dashboard for exact platform strings.
+        'Instagram': 'instagram'
+    }
 
     for post in state['posts']:
-        platform = post.get('platform', 'Unknown')
-        api_platform = platform_map.get(platform)
+        platform_name = post.get('platform', 'Unknown')
+        api_platform = platform_map.get(platform_name)
         
-        # --- EXECUTION MOCK ---
-        time.sleep(1) 
-        post_id = f"mock_id_{hash(post.get('content',''))}"
-        status = "success"
+        print(f"   -> Posting to {platform_name}...")
         
-        if platform == 'YouTube' and post.get('mediaUrl'):
-             status = "error" 
-             print(f"[MOCK] YouTube post failed (simulated image/video requirement error).")
+        # 1. Check for critical errors (Simulation logic for YouTube still good to keep)
+        if platform_name == 'YouTube' and not post.get('videoUrl'):
+             print(f"      [Error] YouTube requires video.")
+             results.append({
+                "platform": platform_name,
+                "status": "error",
+                "error": "Video content required",
+                "id": None
+             })
+             continue
 
-        # --- FOLLOW-UP MOCK (Analytics Retrieval) ---
-        results.append({
-            "platform": platform,
-            "status": status,
-            "id": post_id,
-            "likes": int(time.time() * 1000 % 500) + 50,
-            "shares": int(time.time() * 1000 % 100) + 10,
-            "comments": int(time.time() * 1000 % 50) + 5
-        })
+        # 2. Real API Call to Ayrshare
+        try:
+            payload = {
+                "post": post.get('content'),
+                "platforms": [api_platform],
+                "mediaUrls": [post.get('mediaUrl')] if post.get('mediaUrl') else []
+            }
+            
+            headers = {
+                'Authorization': f'Bearer {AYRSHARE_API_KEY}',
+                'Content-Type': 'application/json'
+            }
+
+            # CALLING AYRSHARE
+            response = requests.post('https://app.ayrshare.com/api/post', json=payload, headers=headers)
+            data = response.json()
+
+            if response.status_code == 200 and data.get('status') == 'success':
+                print(f"      [Success] Posted to Ayrshare! Ref ID: {data.get('id')}")
+                results.append({
+                    "platform": platform_name,
+                    "status": "success",
+                    "id": data.get('id'), # The REAL ID from Ayrshare
+                    "refId": data.get('refId'),
+                    "likes": 0, # Real posts start with 0 likes
+                    "shares": 0,
+                    "comments": 0
+                })
+            else:
+                print(f"      [Fail] Ayrshare Error: {data}")
+                results.append({
+                    "platform": platform_name,
+                    "status": "error",
+                    "error": str(data),
+                    "id": None
+                })
+
+        except Exception as e:
+            print(f"      [Exception] {e}")
+            results.append({
+                "platform": platform_name,
+                "status": "error",
+                "error": str(e),
+                "id": None
+            })
         
     print(f"[EXECUTOR] Finished execution. {len(results)} posts processed.")
     return {"execution_results": results, "status": "executed"}
-
+    
 def reporter_node(state: AgentState):
     """
     Node 3: Analyzes execution results and generates a final report using Gemini.
