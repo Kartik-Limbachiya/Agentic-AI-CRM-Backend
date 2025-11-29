@@ -8,4 +8,8 @@ python-dotenv>=1.0.0
 requests>=2.31.0
 pytest>=7.4.0
 httpx>=0.26.0
+<<<<<<< HEAD
 flake8>=7.0.0
+=======
+flake8>=7.0.0
+>>>>>>> adebb315bf5e8c81ba43901ec38d500be6947927
