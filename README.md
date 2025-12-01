@@ -61,3 +61,29 @@ The system operates on a 3-node graph architecture:
 - Google Cloud API Key (Gemini)
 - (Optional) Ayrshare API Key for real posting
 
+
+## Demo Inputs 
+**1. TechNova Solutions (B2B SaaS)**
+* 1.) Brand Name: TechNova Solutions 
+* 2.) Campaign Goals: Generate 500 demo requests & 40% brand lift in Q1 2025 via AI-feature showcase. 
+* 3.) Target Audience: Tech-savvy project managers and team leads at mid-to-large enterprises (Age: 28-45).
+
+**2. EcoBloom Skincare (D2C Beauty)**
+* 1.) Brand Name: EcoBloom Skincare 
+* 2.) Campaign Goals: Sell 10,000 serum units & gain 50k followers in Month 1 for product launch. 
+* 3.) Target Audience: Environmentally-conscious millennial and Gen-Z women (Age: 22-38).
+
+**3. FitFusion Pro (Fitness & Wellness)**
+* 1.) Brand Name: FitFusion Pro
+* 2.) Campaign Goals: Drive 25k downloads (15% conversion) & 100k viral engagements via fitness challenges.
+* 3.) Target Audience: Health-conscious professionals with limited gym time (Age: 25-50).
+
+**4. BrightMinds Academy (EdTech)**
+* 1.) Brand Name: BrightMinds Academy 
+* 2.) Campaign Goals: Enroll 5,000 students in Data Science Bootcamp & generate $500k revenue in 60 days. 
+* 3.) Target Audience: Career-switching professionals and recent graduates (Age: 21-35).
+
+**5. UrbanNest Realty (Real Estate)**
+* 1.) Brand Name: UrbanNest Realty 
+* 2.) Campaign Goals: Generate 300 monthly leads & close 50 home sales in Q1 2025 via Virtual Tours. 
+* 3.) Target Audience: First-time homebuyers and young families (Age: 28-42).
